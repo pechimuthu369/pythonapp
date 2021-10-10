@@ -1,19 +1,19 @@
-from flask import Flask, render_template
+from flask import Flask,render_template,request
 
 app = Flask(__name__)
 
-@app.route('/')
+@app.route('/',methods=["POST","GET"])
 def index():
-    return render_template('index.html')
-
-@app.route('/weatherfinder')
-def weatherfinder():
     return render_template('weatherfinder.html')
 
-@app.route('/objectfinder')
+@app.route('/weatherfinder',methods=["POST","GET"])
+def weatherfinder():    
+    return render_template('weatherfinder.html')
+
+@app.route('/objectfinder',methods=["POST","GET"])
 def objectfinder():
     return render_template('objectfinder.html')
 
-@app.route('/greet')
+@app.route('/greet',methods=["POST","GET"])
 def hello():
     return 'Hello, World!'

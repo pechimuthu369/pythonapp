@@ -1,5 +1,33 @@
 {% extends 'base.html' %}
 
 {% block content %}
-    <h1>{% block title %} Welcome to Wether Finder Demo {% endblock %}</h1>
+<form method="post" id="weather-form">
+    <br><br><br>
+    <div>
+        <h1>{% block title %} Welcome to Wether Finder Demo {% endblock %}</h1>
+        <label>Enter a City:</label>
+        <input type="text" name="city" id="city">    
+        <button type="submit">submit</button>
+    </div>    
+    <div id="result" name="result"></div>
+</form>
+  <script type="text/javascript">
+    $(document).on('submit','#weather-form',function(e){                    
+      e.preventDefault();
+      $.ajax({        
+        url:'https://api.openweathermap.org/data/2.5/weather?q='+$("#city").val()+'&appid=d35a76a293b5279c50bb20706e5d2f9d',
+        type:'get',   
+        dataType: 'json',        
+        success: function(response) {                        
+            var results = JSON.stringify(response, null, 2)     
+            console.log(results) ;      
+            $("result").html(results);
+
+        },
+        fail: function( jqXHR, textStatus, errorThrown ) {
+            console.log( 'Could not get posts, server response: ' + textStatus + ': ' + errorThrown );
+        }
+      })
+    });
+  </script>
 {% endblock %}

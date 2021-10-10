@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <!-- Required meta tags -->
@@ -9,35 +9,67 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 
     <title>{% block title %} {% endblock %}</title>
+     <!-- Optional JavaScript -->
+ <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+ <script src="https://code.jquery.com/jquery-3.5.1.js" integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+ <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+ <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
   </head>
   <body>
-    <nav class="navbar navbar-expand-md navbar-light bg-light">
-        <a class="navbar-brand" href="{{ url_for('index')}}">Home</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav">
-                <li class="nav-item">
-                    <a class="navbar-brand" href="{{ url_for('weatherfinder')}}">Weather</a>
-                </li>
-                <li class="nav-item">
-                    <a class="navbar-brand" href="{{ url_for('objectfinder')}}">Object</a>
-                </li>
-                <li class="nav-item">
-                    <a class="navbar-brand" href="#">Topic</a>
-                </li>
-            </ul>
-        </div>
-    </nav>
-    <div class="container">
-        {% block content %} {% endblock %}
-    </div>
+    <!-- Creating Nav Bar  -->
+    <section id="navigation">
+     <nav class="navbar navbar-expand-sm 
+         navbar-dark bg-dark">
+         <div class="container">
+             <a class="navbar-brand"
+                 style="color:greenyellow;"
+                 href="{{ url_for('index')}}">
+                 My Demo App
+             </a>
+             
+             <div class=" navbar-default">
+                 <ul class="navbar-nav ml-auto">                     
+                     <li class="nav-item">
+                         <a class="nav-link active" href="{{ url_for('weatherfinder')}}">
+                            Weather
+                         </a>
+                     </li>
 
-    <!-- Optional JavaScript -->
-    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
-  </body>
+                     <li class="nav-item">
+                         <a class="nav-link" href="{{ url_for('objectfinder')}}">
+                             Object
+                         </a>
+                     </li>
+
+                     <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            Other
+                        </a>
+                    </li>
+                 </ul>
+             </div>
+         </div>
+     </nav>
+ <div class="container">     
+     {% block content %} {% endblock %}
+ </div>
+</body>
 </html>
+<script type="text/javascript">
+ /* Code for changing active 
+ link on clicking */
+ $('.nav-link').on('click',function(){
+
+    e.preventDefault();
+//Remove any previous active classes
+$('.nav-link').removeClass('active');
+
+//Add active class to the clicked item
+$(this).addClass('active');
+
+});
+</script>
+
+
+
+
