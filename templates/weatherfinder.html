@@ -15,14 +15,13 @@
     $(document).on('submit','#weather-form',function(e){                    
       e.preventDefault();
       $.ajax({        
+        //weather 
         url:'https://api.openweathermap.org/data/2.5/weather?q='+$("#city").val()+'&appid=d35a76a293b5279c50bb20706e5d2f9d',
         type:'get',   
         dataType: 'json',        
         success: function(response) {                        
             var results = JSON.stringify(response, null, 2)     
-            console.log(results) ;      
-            $("result").html(results);
-
+            console.log(results) ;              
         },
         fail: function( jqXHR, textStatus, errorThrown ) {
             console.log( 'Could not get posts, server response: ' + textStatus + ': ' + errorThrown );
