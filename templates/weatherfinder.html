@@ -9,9 +9,12 @@
         <input type="text" name="city" id="city">    
         <button type="submit">submit</button>
     </div>    
-    <div id="result" name="result"></div>
+    <div id="showData" name="showData"></div>
+    <pre id="rawData" name="rawData"></pre>
 </form>
   <script type="text/javascript">
+    const $showData = $('showData');
+    const $showData = $('rawData');
     $(document).on('submit','#weather-form',function(e){                    
       e.preventDefault();
       $.ajax({        
@@ -19,9 +22,16 @@
         url:'https://api.openweathermap.org/data/2.5/weather?q='+$("#city").val()+'&appid=d35a76a293b5279c50bb20706e5d2f9d',
         type:'get',   
         dataType: 'json',        
-        success: function(response) {                        
-            var results = JSON.stringify(response, null, 2)     
-            console.log(results) ;              
+        success: function(response) {                                                        
+            $.getJSON(results, (response) => {
+            const markup = response.main
+              .map(item => `<li>${item.key}: ${item.value}</li>`)
+              .join('');
+
+            const list = $('<ul />').html(markup);
+            $raw.text(JSON.stringify(response, undefined, 2));
+            $showData.html(list);
+            });            
         },
         fail: function( jqXHR, textStatus, errorThrown ) {
             console.log( 'Could not get posts, server response: ' + textStatus + ': ' + errorThrown );
