@@ -4,39 +4,52 @@
 <form method="post" id="weather-form">
     <br><br><br>
     <div>
-        <h1>{% block title %} Welcome to Wether Finder Demo {% endblock %}</h1>
+        <h1>{% block title %} Welcome to Weather Finder Demo {% endblock %}</h1>
+        <hr>
+        <br/>
+        <!--<iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15280094.550954774!2d73.73385662093261!3d20.77138110995019!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x30635ff06b92b791%3A0xd78c4fa1854213a6!2sIndia!5e0!3m2!1sen!2suk!4v1635846979805!5m2!1sen!2suk" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>-->
         <label>Enter a City:</label>
         <input type="text" name="city" id="city">    
         <button type="submit">submit</button>
     </div>    
-    <div id="showData" name="showData"></div>
-    <pre id="rawData" name="rawData"></pre>
+    <br/><br/>    
+    <div class="row">
+      <div class="col-md-10 col-md-offset-5">
+        <h2><span id="cityname"></span></h2>
+        <h3><span id="weather"></span></h3>
+        <h1><span id="temp"></span></h1>
+        <h4><span id="minmaxtemp"></span></h4>        
+        <h4><span id="feelslike"></span></h4>
+        <h4><span id="latlon"></span></h4>
+      </div>
+  </div>  
 </form>
-  <script type="text/javascript">
-    const $showData = $('showData');
-    const $showData = $('rawData');
+  <script type="text/javascript">  
     $(document).on('submit','#weather-form',function(e){                    
-      e.preventDefault();
-      $.ajax({        
-        ////weather 
-        url:'https://api.openweathermap.org/data/2.5/weather?q='+$("#city").val()+'&appid=d35a76a293b5279c50bb20706e5d2f9d',
-        type:'get',   
-        dataType: 'json',        
-        success: function(response) {                                                        
-            $.getJSON(results, (response) => {
-            const markup = response.main
-              .map(item => `<li>${item.key}: ${item.value}</li>`)
-              .join('');
-
-            const list = $('<ul />').html(markup);
-            $raw.text(JSON.stringify(response, undefined, 2));
-            $showData.html(list);
-            });            
+      e.preventDefault();      
+      getWeather($("#city").val());     
+    });
+    
+    function getWeather(city) {
+      let API_KEY = 'd35a76a293b5279c50bb20706e5d2f9d';
+      $.ajax({
+        url: 'http://api.openweathermap.org/data/2.5/weather',
+        data: {
+          q: city,
+          units: 'metric',
+          APPID: API_KEY
         },
-        fail: function( jqXHR, textStatus, errorThrown ) {
-            console.log( 'Could not get posts, server response: ' + textStatus + ': ' + errorThrown );
+        success: data => {
+          console.log(data);
+          var iconurl = "http://openweathermap.org/img/w/" + data["weather"]["0"]["icon"] + ".png";
+          $("#cityname").text(city);
+          $("#weather").html(data["weather"]["0"]["description"] + " <img id='wicon' src='"+iconurl+"' alt='Weather icon'>");
+          $("#temp").text(data["main"]["temp"]+ String.fromCharCode(176));
+          $("#minmaxtemp").text("High: "+data["main"]["temp_max"] + String.fromCharCode(176) + " - Low: "+data["main"]["temp_max"]  + String.fromCharCode(176));          
+          $("#feelslike").text("Feels Like: "+data["main"]["feels_like"] + String.fromCharCode(176));                             
+          $("#latlon").text("Longitude: "+data["coord"]["lon"] + " - Lattitude: "+data["coord"]["lat"]);          
         }
       })
-    });
+    }
   </script>
 {% endblock %}
