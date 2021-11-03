@@ -5,35 +5,23 @@
     <br><br><br>
     <div>
         <h1>{% block title %} Welcome to Object Finder Demo {% endblock %}</h1>
-        <label>Select a Image:</label>
-        <input type="file" name="file" id="file">    
+        <img src="https://picsum.photos/200/300?random=1" />
         <button type="submit">submit</button>
     </div>    
     <div id="result" name="result"></div>
 </form>
   <script type="text/javascript">
     $(document).on('submit','#object-form',function(e){                    
-
     e.preventDefault();
-    var apiKey = 'acc_a6910ab041ae060';
-    var apiSecret = '2cf42c857875adfcc4fbc3bfe72c3703';
-
-    var imageUrl = 'https://picsum.photos/id/237/200/300';
-    var url = 'https://api.imagga.com/v2/tags?image_url=' + encodeURIComponent(imageUrl) + apiKey +apiSecret;
-
-      $.ajax({        
-        //object 
-        url:url,
-        type:'get',   
-        dataType: 'json',        
-        success: function(response) {                        
-            var results = JSON.stringify(response, null, 2)     
-            console.log(results) ;              
-        },
-        fail: function( jqXHR, textStatus, errorThrown ) {
-            console.log( 'Could not get posts, server response: ' + textStatus + ': ' + errorThrown );
-        }
-      })
+    getObjectDetails('https://i.picsum.photos/id/504/200/200.jpg?hmac=uNktbiKQMUD0MuwgQUxt7R2zjHBGFxyUSG3prhX0FWM');
     });
+
+    function getObjectDetails(url) {      
+      $.getJSON('/findobject/'+ encodeURIComponent(url),
+        function(data) { 
+        console.log(data)
+          $("#result").text(data["result"]["tags"][1]["tag"]["en"]);
+        });
+    }
   </script>
 {% endblock %}
