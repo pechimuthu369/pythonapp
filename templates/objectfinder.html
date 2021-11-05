@@ -1,27 +1,43 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<form method="post" id="object-form">
-    <br><br><br>
-    <div>
-        <h1>{% block title %} Welcome to Object Finder Demo {% endblock %}</h1>
-        <img src="https://picsum.photos/200/300?random=1" />
-        <button type="submit">submit</button>
-    </div>    
-    <div id="result" name="result"></div>
+<form method="post" id="object_form" enctype="multipart/form-data">
+  <br><br><br>
+  <div>
+    <h1>{% block title %} Welcome to Object Finder Demo {% endblock %}</h1>
+    <br/><br/><br/>
+    <p><img src="/images/placeholder.jpg" id="img_placehoder" width="640" height="360"/></p>
+    <p><input type="file" name="file"></p>
+    <p><button type="submit">submit</button></p>
+  </div>
 </form>
-  <script type="text/javascript">
-    $(document).on('submit','#object-form',function(e){                    
-    e.preventDefault();
-    getObjectDetails('https://i.picsum.photos/id/504/200/200.jpg?hmac=uNktbiKQMUD0MuwgQUxt7R2zjHBGFxyUSG3prhX0FWM');
-    });
+<script type="text/javascript">
+  $(document).on('submit', '#object_form', function (e) {
+    e.preventDefault();    
+    console.log("hehehehehe");
+    uploadfiles();
+    //getObjectDetails('https://picsum.photos/500/300?random=1');
+  });
 
-    function getObjectDetails(url) {      
-      $.getJSON('/findobject/'+ encodeURIComponent(url),
-        function(data) { 
+  function uploadfiles() {
+    $.ajax({
+			url: '/uploadfiles',
+			data: $('form').serialize(),
+			type: 'POST',
+			success: function(response){
+				console.log(response);
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
+  }
+
+  function getObjectDetails(url) {
+    $.getJSON('/getobjectdetails/' + encodeURIComponent(url),function (data) {
         console.log(data)
-          $("#result").text(data["result"]["tags"][1]["tag"]["en"]);
-        });
-    }
-  </script>
+        $("#result").text(data["result"]["tags"][1]["tag"]["en"]);
+      });
+  }
+</script>
 {% endblock %}
