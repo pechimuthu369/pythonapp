@@ -1,31 +1,53 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<form method="post" id="object_form" enctype="multipart/form-data">
+<form method="post" id="object_form" name="object_form" enctype="multipart/form-data">
   <br><br><br>
   <div>
     <h1>{% block title %} Welcome to Object Finder Demo {% endblock %}</h1>
     <br/><br/><br/>
     <p><img src="/images/placeholder.jpg" id="img_placehoder" width="640" height="360"/></p>
-    <p><input type="file" name="file"></p>
+    <P><input type="text" id="test" name ="test" value="prabhu" /></P>
+    <p><input type="file" name="file" id="file"></p>
     <p><button type="submit">submit</button></p>
   </div>
 </form>
 <script type="text/javascript">
   $(document).on('submit', '#object_form', function (e) {
-    e.preventDefault();    
-    console.log("hehehehehe");
-    uploadfiles();
+    e.preventDefault();            
+    var formDataRaw = $('#object_form')[0];
+    var form_data = new FormData(formDataRaw);    
+    $.ajax({
+			url: '/uploadajax',
+			data: form_data,
+      contentType: false,
+      cache: false,
+      processData: false,
+			type: 'POST',
+			success: function(response){				
+        console.log(response)
+        $("#result").text(response["result"]["tags"][1]["tag"]["en"]);
+        console.log('Success!');
+			},
+			error: function(error){
+				console.log(error);
+			}
+		});
     //getObjectDetails('https://picsum.photos/500/300?random=1');
   });
 
-  function uploadfiles() {
+  function uploadfiles(form_data) {
     $.ajax({
-			url: '/uploadfiles',
-			data: $('form').serialize(),
+			url: '/uploadajax',
+			data: form_data,
+      contentType: false,
+      cache: false,
+      processData: false,
 			type: 'POST',
-			success: function(response){
-				console.log(response);
+			success: function(data){
+				console.log('Success!');
+        console.log(data)
+        $("#result").text(data["result"]["tags"][1]["tag"]["en"]);
 			},
 			error: function(error){
 				console.log(error);
