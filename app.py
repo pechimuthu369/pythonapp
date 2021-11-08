@@ -37,6 +37,10 @@ def weatherfinder():
 def objectfinder():
     return render_template('objectfinder.html')
 
+@app.route('/facialfinder',methods=["POST","GET"])
+def facialfinder():
+    return render_template('facialfinder.html')
+
 @app.route('/greet',methods=["POST","GET"])
 def hello():
     return 'Hello, World!'

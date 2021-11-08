@@ -5,39 +5,30 @@
   <form method="post" id="object_form" name="object_form" enctype="multipart/form-data">
     <br><br><br>
     <div>
-      <h1>{% block title %} Welcome to Object Finder Demo {% endblock %}</h1>
+      <h1>{% block title %} Welcome to Image - Object Finder Demo {% endblock %}</h1>
       <br />
-      <div class="polaroid">
-          <img src="/static/upload/placeholder.jpg" id="image_file" class="img-responsive">
-      </div> 
-      <br />     
+      <div>
+        <img src="/static/upload/placeholder.jpg" id="image_file" class="img-responsive">
+      </div>
+      <br />
       <p>
         <input type="file" name="file" id="file">
         <button class="btn btn-dark" type="submit">submit</button>
       </p>
-      <div id="ajaxBusy" class="centered">
-        <p id="ajaxBusyMsg">Please wait...</p>
-        <img src="/static/upload/spinner.gif" />
-      </div>
     </div>
     <div id="result">
 
     </div>
   </form>
-  <script type="text/javascript">   
-   $("#file").change(function(){
-        $("#result").html("");
-        readURL(this);
+  <script type="text/javascript">
+    $("#file").change(function () {
+      $("#result").html("");
+      readURL(this);
     });
-    $("#ajaxBusy").hide();
-    $(document).ajaxStart(function () {
-      $("#ajaxBusy").show();
-    }).ajaxStop(function () {
-      $("#ajaxBusy").hide();
-    });
+   
 
     $(document).on('submit', '#object_form', function (e) {
-      e.preventDefault();     
+      e.preventDefault();
       var formDataRaw = $('#object_form')[0];
       var form_data = new FormData(formDataRaw);
       $.ajax({
@@ -48,29 +39,17 @@
         processData: false,
         type: 'POST',
         success: function (response) {
-          console.log(response)
-          $("#result").attr("src", "/static/upload/"+ response["uploaded_file"])
-          $.each(response["result"]["tags"],function(index,value){ 
-            $.each(value, function(index1, value1) {
-              console.log(index1 + " : " + value1);
-              }); 
-          });         
-          $("#result").html("The Image Contains: </br> <b>" +
-            response["result"]["tags"][0]["tag"]["en"] + " , " +
-            response["result"]["tags"][1]["tag"]["en"] + " , " +
-            response["result"]["tags"][2]["tag"]["en"] + " , " +
-            response["result"]["tags"][3]["tag"]["en"] + " , " +
-            response["result"]["tags"][3]["tag"]["en"] + " , " +
-            response["result"]["tags"][4]["tag"]["en"] + " , " +
-            response["result"]["tags"][5]["tag"]["en"] + " , " +
-            response["result"]["tags"][6]["tag"]["en"] + " , " +
-            response["result"]["tags"][7]["tag"]["en"] + " , " +
-            response["result"]["tags"][8]["tag"]["en"] + " , " +
-            response["result"]["tags"][9]["tag"]["en"] + " , " +
-            response["result"]["tags"][10]["tag"]["en"] + " , " +
-            response["result"]["tags"][11]["tag"]["en"] + " , " +
-            response["result"]["tags"][12]["tag"]["en"] + " , " +
-            response["result"]["tags"][13]["tag"]["en"] + "</b>");
+          //console.log(response)                              
+          
+          var items ="";
+          for(var i=0; i<=response["result"]["tags"].length-1; i++)
+          {
+             items  +=   response["result"]["tags"][i]["tag"]["en"] + " , ";
+          }
+          items = items.replace(/,\s*$/, "");
+          //console.log(items);
+
+          $("#result").html("The Image Contains: </br> <b>" + items + "</b>");
           console.log('Success!');
         },
         error: function (error) {
@@ -80,15 +59,15 @@
     });
 
     function readURL(input) {
-        if (input.files && input.files[0]) {
-            var reader = new FileReader();
-            
-            reader.onload = function (e) {
-                $('#image_file').attr('src', e.target.result);
-            }
-            
-            reader.readAsDataURL(input.files[0]);
+      if (input.files && input.files[0]) {
+        var reader = new FileReader();
+
+        reader.onload = function (e) {
+          $('#image_file').attr('src', e.target.result);
         }
+
+        reader.readAsDataURL(input.files[0]);
+      }
     }
   </script>
 </div>
