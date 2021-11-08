@@ -1,65 +1,95 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<form method="post" id="object_form" name="object_form" enctype="multipart/form-data">
-  <br><br><br>
-  <div>
-    <h1>{% block title %} Welcome to Object Finder Demo {% endblock %}</h1>
-    <br/><br/><br/>
-    <p><img src="/images/placeholder.jpg" id="img_placehoder" width="640" height="360"/></p>
-    <P><input type="text" id="test" name ="test" value="prabhu" /></P>
-    <p><input type="file" name="file" id="file"></p>
-    <p><button type="submit">submit</button></p>
-  </div>
-</form>
-<script type="text/javascript">
-  $(document).on('submit', '#object_form', function (e) {
-    e.preventDefault();            
-    var formDataRaw = $('#object_form')[0];
-    var form_data = new FormData(formDataRaw);    
-    $.ajax({
-			url: '/uploadajax',
-			data: form_data,
-      contentType: false,
-      cache: false,
-      processData: false,
-			type: 'POST',
-			success: function(response){				
-        console.log(response)
-        $("#result").text(response["result"]["tags"][1]["tag"]["en"]);
-        console.log('Success!');
-			},
-			error: function(error){
-				console.log(error);
-			}
-		});
-    //getObjectDetails('https://picsum.photos/500/300?random=1');
-  });
+<div>
+  <form method="post" id="object_form" name="object_form" enctype="multipart/form-data">
+    <br><br><br>
+    <div>
+      <h1>{% block title %} Welcome to Object Finder Demo {% endblock %}</h1>
+      <br />
+      <div class="polaroid">
+          <img src="/static/upload/placeholder.jpg" id="image_file" class="img-responsive">
+      </div> 
+      <br />     
+      <p>
+        <input type="file" name="file" id="file">
+        <button class="btn btn-dark" type="submit">submit</button>
+      </p>
+      <div id="ajaxBusy" class="centered">
+        <p id="ajaxBusyMsg">Please wait...</p>
+        <img src="/static/upload/spinner.gif" />
+      </div>
+    </div>
+    <div id="result">
 
-  function uploadfiles(form_data) {
-    $.ajax({
-			url: '/uploadajax',
-			data: form_data,
-      contentType: false,
-      cache: false,
-      processData: false,
-			type: 'POST',
-			success: function(data){
-				console.log('Success!');
-        console.log(data)
-        $("#result").text(data["result"]["tags"][1]["tag"]["en"]);
-			},
-			error: function(error){
-				console.log(error);
-			}
-		});
-  }
+    </div>
+  </form>
+  <script type="text/javascript">   
+   $("#file").change(function(){
+        $("#result").html("");
+        readURL(this);
+    });
+    $("#ajaxBusy").hide();
+    $(document).ajaxStart(function () {
+      $("#ajaxBusy").show();
+    }).ajaxStop(function () {
+      $("#ajaxBusy").hide();
+    });
 
-  function getObjectDetails(url) {
-    $.getJSON('/getobjectdetails/' + encodeURIComponent(url),function (data) {
-        console.log(data)
-        $("#result").text(data["result"]["tags"][1]["tag"]["en"]);
+    $(document).on('submit', '#object_form', function (e) {
+      e.preventDefault();     
+      var formDataRaw = $('#object_form')[0];
+      var form_data = new FormData(formDataRaw);
+      $.ajax({
+        url: '/uploadajax',
+        data: form_data,
+        contentType: false,
+        cache: false,
+        processData: false,
+        type: 'POST',
+        success: function (response) {
+          console.log(response)
+          $("#result").attr("src", "/static/upload/"+ response["uploaded_file"])
+          $.each(response["result"]["tags"],function(index,value){ 
+            $.each(value, function(index1, value1) {
+              console.log(index1 + " : " + value1);
+              }); 
+          });         
+          $("#result").html("The Image Contains: </br> <b>" +
+            response["result"]["tags"][0]["tag"]["en"] + " , " +
+            response["result"]["tags"][1]["tag"]["en"] + " , " +
+            response["result"]["tags"][2]["tag"]["en"] + " , " +
+            response["result"]["tags"][3]["tag"]["en"] + " , " +
+            response["result"]["tags"][3]["tag"]["en"] + " , " +
+            response["result"]["tags"][4]["tag"]["en"] + " , " +
+            response["result"]["tags"][5]["tag"]["en"] + " , " +
+            response["result"]["tags"][6]["tag"]["en"] + " , " +
+            response["result"]["tags"][7]["tag"]["en"] + " , " +
+            response["result"]["tags"][8]["tag"]["en"] + " , " +
+            response["result"]["tags"][9]["tag"]["en"] + " , " +
+            response["result"]["tags"][10]["tag"]["en"] + " , " +
+            response["result"]["tags"][11]["tag"]["en"] + " , " +
+            response["result"]["tags"][12]["tag"]["en"] + " , " +
+            response["result"]["tags"][13]["tag"]["en"] + "</b>");
+          console.log('Success!');
+        },
+        error: function (error) {
+          console.log(error);
+        }
       });
-  }
-</script>
+    });
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            
+            reader.onload = function (e) {
+                $('#image_file').attr('src', e.target.result);
+            }
+            
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+  </script>
+</div>
 {% endblock %}

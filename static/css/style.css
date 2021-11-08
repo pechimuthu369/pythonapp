@@ -4,3 +4,7 @@ h1 {
     text-align: center;
     padding: 10px;
 }
+img{ 
+    max-width:50%; 
+    height:50%; 
+    } 
