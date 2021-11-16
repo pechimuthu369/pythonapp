@@ -1,13 +1,50 @@
 {% extends 'base.html' %}
 
 {% block content %}
-<form method="post" id="weather-form">
-    <br><br><br>
-    <div>
-        <h1>{% block title %} Welcome to Facial-Finder Demo {% endblock %}</h1>        
-        <br/>                
-    </div>    
-</form>
-<script type="text/javascript">  
-</script>
-{% endblock %}
+<div>
+    <form method="post" id="object_form" name="object_form" enctype="multipart/form-data">
+      <br><br><br>
+      <div>
+        <h1>{% block title %} Welcome to Image - Object Finder Demo {% endblock %}</h1>       
+          <button class="btn btn-dark" type="submit">submit</button>
+        </p>
+      </div>
+      <div id="result">
+  
+      </div>
+    </form>
+    <script type="text/javascript">            
+      $(document).on('submit', '#object_form', function (e) {
+        e.preventDefault();
+        var formDataRaw = $('#object_form')[0];
+        var form_data = new FormData(formDataRaw);
+        $.ajax({
+          url: '/facialupload',
+          data: form_data,
+          contentType: false,
+          cache: false,
+          processData: false,
+          type: 'POST',
+          success: function (response) {
+            console.log(response)                                                     
+          },
+          error: function (error) {
+            console.log(error);
+          }
+        });
+      });
+  
+      function readURL(input) {
+        if (input.files && input.files[0]) {
+          var reader = new FileReader();
+  
+          reader.onload = function (e) {
+            $('#image_file').attr('src', e.target.result);
+          }
+  
+          reader.readAsDataURL(input.files[0]);
+        }
+      }
+    </script>
+  </div>
+  {% endblock %}

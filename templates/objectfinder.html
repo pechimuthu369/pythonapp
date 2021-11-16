@@ -32,7 +32,7 @@
       var formDataRaw = $('#object_form')[0];
       var form_data = new FormData(formDataRaw);
       $.ajax({
-        url: '/uploadajax',
+        url: '/objectupload',
         data: form_data,
         contentType: false,
         cache: false,
@@ -40,7 +40,7 @@
         type: 'POST',
         success: function (response) {
           //console.log(response)                              
-          
+
           var items ="";
           for(var i=0; i<=response["result"]["tags"].length-1; i++)
           {
